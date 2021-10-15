@@ -1,0 +1,175 @@
+
+# Sasha’s Mini Data Analysis Project
+
+Sasha Tuttle October 14, 2021
+
+`{r setup, include=FALSE} knitr::opts_chunk$set(echo = FALSE)`
+
+Loading packages:
+
+``` {r}
+#install.packages("devtools")
+#devtools::install_github("UBC-MDS/datateachr")
+suppressPackageStartupMessages(library(rmarkdown))
+suppressPackageStartupMessages(library(devtools))
+suppressPackageStartupMessages(library(datateachr))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(ggplot2))
+```
+
+Loading the pilot study data
+
+``` {r}
+Pilot<-read.csv("C:/Users/stutt/OneDrive/Desktop/Greenhouse_study/Pilot_study.csv", 
+  header=T)
+head(Pilot)
+Stem<-rename(Pilot, stem_diam_cm = stem_diam)
+```
+
+**Task 1: Investigating the datasets in the datateachr package**
+
+``` {r}
+dim(Pilot)
+typeof(Pilot)
+class(Pilot)
+```
+
+The pilot study dataset has 36 rows and 15 columns. It is classified as
+a data frame.
+
+``` {r}
+#?cancer_sample
+print(cancer_sample)
+typeof(cancer_sample)
+dim(cancer_sample)
+class(cancer_sample)
+```
+
+The cancer_sample data set has 596 rows, 32 columns, and is classified
+as a “list”/“data.frame”.
+
+``` {r}
+#?parking_meters
+print(parking_meters)
+typeof(parking_meters)
+dim(parking_meters)
+class(parking_meters)
+```
+
+The parking_meter data set has 10,032 rows, 22 columns, and is
+classified as a “list”/“data.frame”.
+
+``` {r}
+#?steam_games
+print(steam_games)
+typeof(steam_games)
+dim(steam_games)
+class(steam_games)
+```
+
+The steam_games dataset has 40833 rows, 21 columns, and is classified as
+a “list”/“data.frame”.
+
+Datasets ranked from first to last choice:
+
+1.  Pilot_study
+2.  parking_meters
+3.  steam_games
+4.  cancer_sample
+
+Of the four datasets investigated, my top two choices are the pilot
+study and parking meter data. The pilot study interests me because this
+dataset needs organizing and I am familiar with it. The parking meter
+data set is also ideal because it is smaller relative to the other
+datasets provided and it’s easier to understand (relative to the breast
+cancer dataset).
+
+**Task 2: Exploring data from the pilot study.**
+
+1.  Plot the distribution of a numeric variable.
+
+I plotted the stem diameter(cm) of the different blueberry varieties to
+see if one of the varieties had a greater stem diameter relative to the
+other. Thicker stems may have more leaves, allowing branches to produce
+a greater number of berries or heavier berries. So, if thicker branches
+were accidentally chosen for one variety compared to the other, we may
+see a greater yield and berry weight for said variety.
+
+``` {r}
+ggplot(Pilot, aes(Variety, stem_diam)) +
+  geom_boxplot(width=0.3) + geom_point() + ylab("Stem diameter (cm)")+
+  ggtitle("Boxplot of Stem Diameter vs Blueberry Variety ")
+```
+
+From the boxplot above, it doesn’t seem like there is a significant
+difference between the stem diameter of the two varieties. However, I
+should also see if stem diameter differs significantly between different
+treatments within the same variety. This could act as a confounding
+variable and affect my results.
+
+2.  Explore the relationship between two variables in a plot.
+
+I plotted the stem diameter of the variety against the berry weight to
+see if I could find a linear relationship. I hypothesized that clusters
+with thicker branches would have more leaves and energy to produce
+heavier berries.
+
+``` {r}
+ggplot(Pilot, aes(x=stem_diam, y=berry_weight)) +
+  geom_point() + ylab("Berry weight (g)") + xlab("Stem diameter (cm)") +
+  ggtitle("Scatterplot of Blueberry Weight vs Stem diameter")
+```
+
+The plot produced doesn’t suggest a relationship is present between the
+two variables. I should analyze the data further with a regression to be
+certain.
+
+3.  Filter observations
+
+I filtered my data into two different blueberry varieties (the pollen
+recipients in the experiment). Blueberry variety can significantly
+affect blueberry weight (among other parameters) and I’m not interested
+in this variable. So, I will assess the effect on each variety
+separately.
+
+``` {r}
+Blue<-filter(Pilot, Variety == "Bluecrop")
+head(Blue)
+Duke<-filter(Pilot, Variety == "Duke")
+head(Duke)
+```
+
+4.  Create a tibble
+
+I created a tibble to separate the Bluecrop variety from the Duke
+variety. Blueberry variety can have a significant effect on the
+variables I measured so I want to assess the effects of
+cross-pollination on each variety separately. I arranged pollen_donor
+column in descending order so I can more easily compare the self-crossed
+treatments against the out-crossed treatments. I also only selected the
+fruit set and berry weight columns so I can ignore the columns used in
+calculations and for sample IDs.
+
+``` {r}
+as_tibble(Pilot) %>%
+  select(Variety, Pollen_donor, fruit_set, berry_weight, 
+  Average_TSS, Average_pH, TA.true.) %>%
+  filter(Variety == "Bluecrop") %>%
+  arrange(Pollen_donor, desc(berry_weight)) %>%
+  rename(Berry_weight_g = berry_weight) %>%
+  rename(TSS = Average_TSS) %>%
+  rename(pH = Average_pH) %>%
+  rename(Titratable_Acid = TA.true.)
+```
+
+Task 3: Write your research questions
+
+-   Do blueberry flowers of the bluecrop variety experience a greater
+    fruit set when they receive pollen from another blueberry variety?
+
+-   Do heavier berries have a higher TSS? a lower pH/TA?
+
+-   Does stem diameter have an effect on blueberry weight and/or TSS?
+
+-   Does the Bluecrop variety experience greater benefits from receiving
+    pollen from another variety relative to the Duke variety?
