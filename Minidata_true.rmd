@@ -1,7 +1,7 @@
 ---
 output:
-  pdf_document: default
-  html_document: default
+  github_document:
+  html_preview: false
 ---
 
 # Sasha’s Mini Data Analysis Project
@@ -30,6 +30,23 @@ Pilot<-read.csv("C:/Users/stutt/OneDrive/Desktop/Greenhouse_study/Pilot_study.cs
 head(Pilot)
 Stem<-rename(Pilot, stem_diam_cm = stem_diam)
 ```
+
+The Pilot_study.csv file contains data from a pilot study where I tested the 
+effects of cross-pollination on three different varieties of *V. corymbosum* 
+(highbush blueberry). I tested the effects of cross-pollination with regards to 
+fruit yield, berry weight, TSS (%), pH, and titratable acid (TA). I hypothesized 
+that blueberry flowers that received pollen from a different variety would have 
+a higher yield and berry weight relative to flowers that received pollen from the 
+same variety. I also hypothesized that blueberry flowers that were 
+cross-pollinated would yield higher quality blueberries (high TSS, low pH, low TA)
+relative to self-crossed blueberry flowers. Treatments were assigned to different 
+branches of the same bush, so all of the measurements were taken for a whole 
+cluster of berries. Note that the units for fruit set and TSS are in percent and the units for TA are mg citric acid/g formula weight (FW). 
+
+I am interested in the data in the columns titled: "Variety", "Pollen_donor",
+"fruit_set", "berry_weight", "stem_diam", "Average_TSS", "Average_pH", and "TA.true".
+The other columns are not of interest as they were used for calculation or are 
+simply sample IDs. 
 
 **Task 1: Investigating the datasets in the datateachr package**
 
