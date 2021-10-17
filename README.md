@@ -33,4 +33,4 @@ relative to self-crossed blueberry flowers. Treatments were assigned to differen
 branches of the same bush, so all of the measurements were taken for a whole 
 cluster of berries. Note that the units for fruit set and TSS are in percent and the units for TA are mg citric acid/g formula weight (FW). 
 
-
+The Minidata_true.rmd file contains the work done up until Milestone 1 for the Mini data analysis assignment for the stat545A course. 
