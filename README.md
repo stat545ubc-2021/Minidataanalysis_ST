@@ -21,3 +21,16 @@ Milestone 3 [ ] - October 28, 2021
  - Read and write data as separate files.
 
 Pilot_study dataset description:
+The Pilot_study.csv file contains data from a pilot study where I tested the 
+effects of cross-pollination on three different varieties of *V. corymbosum* 
+(highbush blueberry). I tested the effects of cross-pollination with regards to 
+fruit yield, berry weight, TSS (%), pH, and titratable acid (TA). I hypothesized 
+that blueberry flowers that received pollen from a different variety would have 
+a higher yield and berry weight relative to flowers that received pollen from the 
+same variety. I also hypothesized that blueberry flowers that were 
+cross-pollinated would yield higher quality blueberries (high TSS, low pH, low TA)
+relative to self-crossed blueberry flowers. Treatments were assigned to different 
+branches of the same bush, so all of the measurements were taken for a whole 
+cluster of berries. Note that the units for fruit set and TSS are in percent and the units for TA are mg citric acid/g formula weight (FW). 
+
+
