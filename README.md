@@ -24,7 +24,7 @@ Pilot_study dataset description:
 The Pilot_study.csv file contains data from a pilot study where I tested the 
 effects of cross-pollination on three different varieties of *V. corymbosum* 
 (highbush blueberry). I tested the effects of cross-pollination with regards to 
-fruit yield, berry weight, TSS (%), pH, and titratable acid (TA). I hypothesized 
+fruit yield (%), berry weight (g), TSS (%), pH, and titratable acid (TA). I hypothesized 
 that blueberry flowers that received pollen from a different variety would have 
 a higher yield and berry weight relative to flowers that received pollen from the 
 same variety. I also hypothesized that blueberry flowers that were 
