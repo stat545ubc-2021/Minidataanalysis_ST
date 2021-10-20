@@ -10,7 +10,7 @@ Milestone 1 [x] - October 14th 2021 (extension required)
  - Create four potential research questions to be further explored. 
  - Create a clear and reproducible report using R markdown.
 
-Milestone 2 [ ] - October 19th 2021
+Milestone 2 [X] - October 19th 2021
  - Use packages dplyr and tidyr to manipulate and summarize my data.
  - Understand what 'tidy' data is and how to create it.
  - Better understand how to use R to answer research questions. 
