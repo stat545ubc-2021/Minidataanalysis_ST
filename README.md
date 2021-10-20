@@ -37,3 +37,5 @@ The Minidata_true.rmd file contains the work done up until Milestone 1 for the M
 The Minidata_true.md file is a knitted version of the Minidata_true.md file. 
 The Minidata_true_files/figure-gfm folder includes the figures and plots created in Milestone 1. 
 Milestone-2_files includes the figures and plots for Milestone 2. 
+Milestone 2.rmd file contains the work up to milestone 2.
+Milestone 2.md file is a knitted version of the Milestone 2.rmd file. 
