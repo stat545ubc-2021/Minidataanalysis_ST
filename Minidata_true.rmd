@@ -184,9 +184,9 @@ as_tibble(Pilot) %>%
   rename(Titratable_Acid = TA.true.)
 ```
 
-Task 3: Write your research questions
+**Task 3: Write your research questions**
 
--   Do blueberry flowers of the bluecrop variety experience a greater
+-   Do blueberry flowers of the Bluecrop variety experience a greater
     fruit set when they receive pollen from another blueberry variety?
 
 -   Do heavier berries have a higher TSS? a lower pH/TA?
@@ -195,3 +195,6 @@ Task 3: Write your research questions
 
 -   Does the Bluecrop variety experience greater benefits from receiving
     pollen from another variety relative to the Duke variety?
+
+**Milestone 2**
+

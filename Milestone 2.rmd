@@ -1,7 +1,7 @@
 ---
 title: "Mini Data Analysis Milestone 2"
 author: "Sasha Tuttle"
-output: md_document
+output: github_document
 ---
 
 Fill in the sections that are commented out with `<!--- start your work here--->`.
@@ -141,6 +141,7 @@ summary(Blue_R$fruit_set)
 
 **Graph the summarized variables (Task 5)** 
 
+
 ```{r}
 Blue<-as_tibble(Data) %>%
   filter(Variety == "Bluecrop")
@@ -184,6 +185,7 @@ rename(Titratable_acid = TA.true.)
 
 head(Data1, n=36)
 ```
+
 Organizing the data like so, it does seem like heavier berries may have a higher TSS
 in the control treatment (Bluecrop x Bluecrop) but the trend isn't as apparent in
 the other treatments. Potential trends in the pH aren't as apparent either. I'll
@@ -200,7 +202,7 @@ relationship. I'll do the same with berry weight vs pH and berry weight vs TSS,
 but I suspect that there will be a negative linear relationship in both cases. 
 
 
-```{r}
+```{r warning=FALSE}
 #Testing berry weight against TSS using the combined data
 ggplot(Data, aes(Berry_weight_g, TSS)) +
   geom_point(size=3, alpha=0.8) + 
@@ -220,7 +222,7 @@ trying to fit the data to a linear model and using regression statistics. The
 relationship is harder to see when separating the data into the different treatments.
 
 
-```{r}
+```{r warning=FALSE}
 #Testing berry weight against pH using the combined data
 ggplot(Data, aes(pH, Berry_weight_g)) +
   geom_point(size=3, alpha=0.8) + 
@@ -238,7 +240,7 @@ Unlike the previous set of figures, it is harder to see a trend in the data, eve
 before separating the data into the different treatments. I would still try 
 fitting the data to a linear model via regression to be sure. 
 
-```{r}
+```{r warning=FALSE}
 #Testing berry weight against TA using the combined data
 ggplot(Data, aes(Titratable_acid, Berry_weight_g)) +
   geom_point(size=3, alpha=0.8) + 
@@ -256,6 +258,7 @@ Similar to the previous set of scatterplots, it's difficult to see a trend. Agai
 I'd like to try fitting the data to a linear model.  
 
 **Research question 3**
+
 I suspect that stem diameter may have an effect on berry weight because thicker
 stems should carry more water and nutrients, and hold more leaves (relative to 
 thinner stems). These attributes could yield larger berries from the additional 
@@ -278,6 +281,7 @@ Data2<-as_tibble(Pilot) %>%
   rename(Stem_diam_cm = stem_diam)
 head(Data2, n=36)
 ```
+
 There doesn't appear to be any obvious trend organizing the data this way. I'll
 have to create a scatterplot to see if a trend becomes more easily visible. 
 
@@ -287,6 +291,7 @@ ggplot(Data2, aes(Stem_diam_cm, Berry_weight_g)) +
   ylab("Berry weight (g)") + ggtitle("Scatterplot of Berry weight vs Stem diameter")
 
 ```
+
 From the scatterplot above, it is difficult to see if there is a strong relationship
 between the berry weight and stem diameter. I would have to try fitting the data
 to a linear model via regression to know for sure. 
@@ -340,6 +345,7 @@ summary(Blue_B$Titratable_acid)
 summary(Blue_D$Titratable_acid)
 summary(Blue_R$Titratable_acid)
 ```
+
 There doesn't appear to be a significant difference in TSS or pH between the 
 treatments in the Bluecrop variety. However, there may be a significant difference
 in the TA between the treatments. I have to test this with an ANOVA to be certain.
@@ -380,6 +386,7 @@ I would need to investigate this further with ANOVA to know for certain (assumin
 the data follows a normal distribution).
 
 **Graph the data**
+
 To illustrate the data and look for signs of correlation, I need to create 
 boxplots to compare the TSS, pH and TA between the different treatments of the 
 two varieties. 
@@ -406,7 +413,7 @@ The boxplots help illustrate the range and medians of the data. Again, there
 seems like there could be a significant difference between the TSS and TA but 
 there's still no way to say for certain without using statistics. 
 
-```{r}
+```{r warning=FALSE}
 #Filtering the variety to Duke only 
 Du<-as_tibble(Data) %>%
   filter(Variety == "Duke")
@@ -491,17 +498,32 @@ Be sure to explain your reasoning for this task. Show us the "before" and "after
 
 <!--------------------------- Start your work below --------------------------->
 
+```{r}
+#The first tibble I created to tidy the data
 Data<-as_tibble(Pilot) %>%
-select(Variety, Pollen_donor, berry_weight, fruit_set,
-Average_TSS, Average_pH, TA.true.) %>%
-arrange(Pollen_donor, desc(fruit_set)) %>%
-rename(Berry_weight_g = berry_weight) %>%
-rename(TSS = Average_TSS) %>%
-rename(pH = Average_pH) %>%
-rename(Titratable_acid = TA.true.)
+  select(Variety, Pollen_donor, berry_weight, fruit_set,
+  Average_TSS, Average_pH, TA.true.) %>%
+  arrange(Pollen_donor, desc(fruit_set)) %>%
+  rename(Berry_weight_g = berry_weight) %>%
+  rename(TSS = Average_TSS) %>%
+  rename(pH = Average_pH) %>%
+  rename(Titratable_acid = TA.true.)
 
+#Referring back to the original dataset to see which columns are missing from the tibble
+head(Pilot)
+
+#Untidying the original tibble
 Untidy<-as_tibble(Data) %>%
-  
+  rename(Average_TSS = TSS) %>%
+  rename(Average_pH = pH) %>%
+  rename(TA.true. = Titratable_acid) %>%
+  arrange(Variety, Pollen_donor)
+
+head(Untidy)
+
+```
+Now the "Untidy" data is as close to the original, untidy "Pilot" dataset as I 
+can make it (without adding back the missing columns). 
 
 <!----------------------------------------------------------------------------->
 
@@ -514,7 +536,16 @@ Try to choose a version of your data that you think will be appropriate to answe
 <!--------------------------- Start your work below --------------------------->
 
 For milestone 3, I'd like to pursue the first and last research questions.
-These research questions focus on my primary hypotheses and predictions rather than potential confounding variables. 
+These research questions focus on my primary hypotheses and predictions rather 
+than potential confounding variables. 
+
+As a refresher, these research questions are:
+
+1. Do blueberry flowers of the bluecrop variety experience a greater fruit set 
+when they receive pollen from another blueberry variety?
+
+4. Does the Bluecrop variety experience greater benefits from receiving pollen 
+from another variety relative to the Duke variety?
 
 <!----------------------------------------------------------------------------->
 
