@@ -36,3 +36,4 @@ cluster of berries. Note that the units for fruit set and TSS are in percent and
 The Minidata_true.rmd file contains the work done up until Milestone 1 for the Mini data analysis assignment for the stat545A course. 
 The Minidata_true.md file is a knitted version of the Minidata_true.md file. 
 The Minidata_true_files/figure-gfm folder includes the figures and plots created in Milestone 1. 
+Milestone-2_files includes the figures and plots for Milestone 2. 
