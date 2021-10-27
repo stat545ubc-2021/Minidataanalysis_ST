@@ -1,7 +1,7 @@
 ---
 title: "Mini Data-Analysis Deliverable 3"
 author: Sasha Tuttle
-output: html_document
+output: github_document
 ---
 
 
@@ -35,8 +35,15 @@ Begin by loading your data and the tidyverse package below:
 ```{r, message = FALSE}
 Pilot<-read.csv("C:/Users/stutt/OneDrive/Desktop/Greenhouse_study/Pilot_study.csv", 
   header=T)
+#install.packages("cowplot")
+#install.packages("gridtext")
+#install.packages("ggpubr")
+library(cowplot)
 library(tidyverse)
 library(forcats)
+library(ggplot2)
+library(ggpubr)
+library(rstatix)
 
 ```
 
@@ -47,7 +54,7 @@ From Milestone 2, you chose two research questions. What were they? Put them her
 when they receive pollen from another blueberry variety?*
 
 2. *Does the Bluecrop variety experience greater benefits from receiving pollen 
-from another variety relative to the Duke variety*
+from another variety relative to the Duke variety?*
 <!----------------------------------------------------------------------------->
 
 
@@ -102,23 +109,63 @@ Now, choose two of the following tasks.
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Task Number**: 1
+**Task Number**: 2 (without use of forcats)
 
-The boxplot I created before is an improvement from before because I can now 
+The boxplot I created before is an improvement from before since I can now 
 compare the fruit set between treatments for both varieties (to see if one variety 
 experiences a greater benefit from cross-pollination relative to the other). 
 However, the control for the Bluecrop treatment is the Bluecrop pollen donor 
-whereas the control for the Duke variety is the Duke pollen donor. But ggplot
-organizes the boxplots in alphabetical order by default. I want the boxplots
-that represent the control treatments to go first in each plot (this is already
-the case for the Bluecrop variety boxplots but not for the Duke variety boxplots). 
+whereas the control for the Duke variety is the Duke pollen donor. I need to 
+make the control treatments stick out in some way. 
 
-####Alternatively, I could use fct_explicit_na to see how many NAs exist in a variable.
+
+```{r}
+alldata<- Pilot %>%
+  mutate(Cross = ifelse(Variety == Pollen_donor, "self-cross", "out-cross")) %>%
+  select(Variety, Pollen_donor, fruit_set, berry_weight, Average_TSS:Cross) %>%
+  arrange(Variety, Pollen_donor, Cross) %>%
+  rename("TSS" = "Average_TSS")
+
+ggplot(alldata, aes(Pollen_donor, fruit_set, fill = Cross)) + facet_wrap(~Variety) + geom_boxplot() + 
+    geom_jitter(width=0.1, alpha=0.5) + xlab("pollen donor") + 
+    ylab("fruit set (%)") +
+    ggtitle("Fruit Set vs Pollen Donor in Both Varieties")
+
+```
+
+Now that I've grouped the treatments (self-cross if the flower received pollen
+from the same variety and out-cross if the flower received pollen form a different
+variety), I can more easily compare the control groups against the others. 
+I can see that median fruit set is greater across all treatments in the Bluecrop 
+variety relative to the Duke variety. I can also see that the control treatment 
+had the lowest fruit set in the Bluecrop variety but this wasn't the case in the 
+Duke variety! 
+
+**Task Number**: Joining a new factor with existing factors 
+
+Because I only have two categorical variables/factors in this data set, it makes 
+very little sense for me to re-organize the factors. I am also not missing any 
+data from either of the factor columns but I can add a factor to the existing 
+data set. Please note that the factor I'm adding is NOT true data. I will join 
+the new factor to the existing data set as a demonstration of my understanding 
+of the forcat package. 
 
 
 ```{r}
 
+#data2<- Pilot %>%
+  #select(Variety, Pollen_donor, fruit_set, berry_weight, Average_TSS) %>%
+  #arrange(Variety, Pollen_donor)
+#
+#head(data2, n=36)
 
+#df1 <- factor(c(Species = "Highbush", "Lowbush"), c(Variety = "Bluecrop", "Duke"))
+#df1
+#nrow(alldata$Variety)
+
+#df2 <-bind_cols(df1, alldata$Variety)
+
+#come back to this!!!!!!!!!!!!
 
 ```
 
@@ -127,25 +174,16 @@ the case for the Bluecrop variety boxplots but not for the Duke variety boxplots
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Task Number**: 2
+**Task Number**: 2 (without use of forcats)
 
-It may be helpful to combine both varieties and create a new dummy variable 
-column so each row of data is classified as either self-crossed or out-crossed. 
-Combining the data like this could increase the chances of fitting the data to a 
-linear model but perhaps unfairly so. Blueberry variety can have a significant 
-effect on blueberry weight, TSS, pH, and TA, so removing this factor from the 
-model could hurt it more than help. Regardless, I will explore what a boxplot
-would look like if I combined this data.
+It may also be helpful to combine data from both varieties, increasing the chances of 
+finding significant differences but perhaps unfairly so. Blueberry variety can 
+have a significant effect on blueberry weight, TSS, pH, and TA, so removing this 
+factor from the model could hurt it more than help. Regardless, I will explore 
+what a boxplot would look like if I combined this data.
 
 ```{r}
-#First, I need to create the new column (self-crossed vs out-crossed)
-alldata<- Pilot %>%
-  mutate(Cross = ifelse(Variety == Pollen_donor, "self-cross", "out-cross")) %>%
-  select(Variety, Pollen_donor, fruit_set, berry_weight, Average_TSS:Cross) %>%
-  arrange(Variety, Pollen_donor, Cross)
-
-#Now I can create the next boxplot
-#Note: the code used to remove the a-axis label was obtained from https://www.datanovia.com/en/blog/ggplot-axis-labels/#:~:text=Remove%20the%20x%20and%20y,x%20%3D%20element_blank())%20.
+#Note: the code used to remove the x-axis label was obtained from https://www.datanovia.com/en/blog/ggplot-axis-labels/#:~:text=Remove%20the%20x%20and%20y,x%20%3D%20element_blank())%20.
 
 ggplot(alldata, aes(Cross, fruit_set)) + geom_boxplot() + 
     geom_jitter(width=0.1, alpha=0.5) + 
@@ -157,7 +195,7 @@ ggplot(alldata, aes(Cross, fruit_set)) + geom_boxplot() +
 Surprisingly, combining the data and ignoring the different varieties actually 
 made the differences between my boxplots look less significant! I would still
 compare the models for both the combined data and the original but I feel the 
-original would probably be better for exploring this potential relationship. 
+original would probably be better for exploring this potential relationship.
 
 <!----------------------------------------------------------------------------->
 
@@ -171,9 +209,9 @@ Pick a research question, and pick a variable of interest (we'll call it "Y") th
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Research Question**: FILL_THIS_IN
+**Research Question**: Does the Bluecrop variety experience greater benefits from receiving pollen from another variety relative to the Duke variety?
 
-**Variable of interest**: FILL_THIS_IN
+**Variable of interest**: Total soluble solids (TSS) %
 
 <!----------------------------------------------------------------------------->
 
@@ -188,6 +226,35 @@ Fit a model or run a hypothesis test that provides insight on this variable with
 
 <!-------------------------- Start your work below ---------------------------->
 
+In order to see if there is a statistically significant difference between the 
+TSS of the different treatments in Bluecrop and Duke, I will have to try running
+an anova (assuming the data follows a normal distribution).
+
+```{r}
+#Creating a model for the Bluecrop variety 
+model1<- aov(Average_TSS ~ Pollen_donor, data = Blue)
+
+#Checking normal distribution and equal variance assumptions
+ggqqplot(residuals(model1))
+plot(model1,1)
+shapiro.test(Blue$Average_TSS)
+
+#Filtering just for the Duke variety 
+Du<-as_tibble(Pilot) %>%
+  filter(Variety == "Duke")
+
+#Creating a model just for Duke 
+model2 <- aov(Average_TSS ~ Pollen_donor, data = Du)
+
+#Checking normal distribution and equal variance assumptions
+ggqqplot(residuals(model2))
+plot(model2,1)
+shapiro.test(Du$Average_TSS)
+
+```
+
+I've fit the data to an anova model and checked the normal distribution and
+equal variance of residuals assumptions. 
 
 <!----------------------------------------------------------------------------->
 
@@ -201,9 +268,27 @@ Produce something relevant from your fitted model: either predictions on Y, or a
   
 <!-------------------------- Start your work below ---------------------------->
 
+I will use the summary function to obtain a p-value for both models.
 
+```{r}
+#Obtaining a p-value for the 1st model 
+summary(model1)
+
+#Obtaining a p-value for the 2nd model 
+summary(model2)
+
+```
+
+I assessed the difference between treatments using anova(). I compared the 
+p-values to alpha 0.05 and concluded that I lack evidence to reject the null 
+hypothesis. I concluded that the difference in treatments is not statistically 
+significant for either variety. 
+
+Note: I was not able to use the broom package to tidy my model results because
+the model I created was not a linear model between two continuous variables. Had
+I have created a linear model to test for a correlation between berry weight and 
+TSS (like I was interested in Milestone 2), I could have used this package. 
 <!----------------------------------------------------------------------------->
-
 
 
 # Exercise 3: Reading and writing data
@@ -219,6 +304,23 @@ Take a summary table that you made from Milestone 2 (Exercise 1.2), and write it
   
 <!-------------------------- Start your work below ---------------------------->
 
+```{r}
+
+#Retrieving a tibble I created in milestone 2
+Data<-as_tibble(Pilot) %>%
+select(Variety, Pollen_donor, berry_weight, fruit_set,
+Average_TSS, Average_pH, TA.true.) %>%
+arrange(Pollen_donor, desc(fruit_set)) %>%
+rename(Berry_weight_g = berry_weight) %>%
+rename(TSS = Average_TSS) %>%
+rename(pH = Average_pH) %>%
+rename(Titratable_acid = TA.true.)
+
+#Writing the tibble I created in Milestone 2 as a csv
+write_csv(Data, here::here("output", "exported_data.csv"))
+
+```
+
 
 <!----------------------------------------------------------------------------->
 
@@ -229,6 +331,13 @@ Write your model object from Exercise 2 to an R binary file (an RDS), and load i
 - The same robustness and reproducibility criteria as in 3.1 apply here.
 
 <!-------------------------- Start your work below ---------------------------->
+
+```{r}
+saveRDS(model1, here::here("output", "Model1"))
+dir(here::here("output"))
+
+readRDS(here::here("output", "Model1"))
+```
 
 
 <!----------------------------------------------------------------------------->
