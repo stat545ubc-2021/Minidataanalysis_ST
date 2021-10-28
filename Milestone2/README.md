@@ -2,7 +2,7 @@ UBC STAT 545A October 2021
 
 Mini data analysis - Milestone 2
 
-This folder includes all of my work for Milestone 1, the first part of this assignment.
+This folder includes all of my work for Milestone 2, the second part of this assignment.
 
 Overall, it was my objective to use the packages dplyr and tidyr to tidy my data, allowing me to pursue the research questions laid out in Milestone 1. 
 
