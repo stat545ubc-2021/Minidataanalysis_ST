@@ -2,7 +2,7 @@ UBC STAT 545A October 2021
 
 Mini data analysis - Milestone 3
 
-This folder includes all of my work for Milestone 1, the first part of this assignment.
+This folder includes all of my work for Milestone 3, the final part of this assignment.
 
 Overall, it was my objective to practice manipulating factors using the "forcats" package, fit my data to a model to extract statistical results, and to practice reading 
 and writing data. 
