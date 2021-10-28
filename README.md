@@ -33,11 +33,7 @@ relative to self-crossed blueberry flowers. Treatments were assigned to differen
 branches of the same bush, so all of the measurements were taken for a whole 
 cluster of berries. Note that the units for fruit set and TSS are in percent and the units for TA are mg citric acid/g formula weight (FW). 
 
- -The Minidata_true.rmd file contains the work done up until Milestone 1 for the Mini data analysis assignment for the stat545A course. 
- -The Minidata_true.md file is a knitted version of the Minidata_true.md file. 
- -The Minidata_true_files/figure-gfm folder includes the figures and plots created in Milestone 1. 
- 
- Milestone 2 folder: includes all of the work done to accomplish the objectives for Milestone 2.
- -Milestone-2_files includes the figures and plots for Milestone 2. 
- -Milestone 2.rmd file contains the work up to milestone 2.
- -Milestone 2.md file is a knitted version of the Milestone 2.rmd file. 
+Please open each folder to see the description of the files inside. 
+ - Milestone1 includes work done to accomplish the objectives listed above for Milestone 1. 
+ - Milestone2 includes work done to accomplish the objectives listed above for Milestone 2.
+ - Milestone3 includes work done to accomplish the objectives listed above for Milestone 3.
