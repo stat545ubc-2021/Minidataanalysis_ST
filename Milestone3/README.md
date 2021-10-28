@@ -1,6 +1,6 @@
 UBC STAT 545A October 2021
 
-Mini data analysis - Milestone 1
+Mini data analysis - Milestone 3
 
 This folder includes all of my work for Milestone 1, the first part of this assignment.
 
