@@ -54,15 +54,15 @@ Begin by loading your data and the tidyverse package below:
 ``` r
 Pilot<-read.csv("C:/Users/stutt/OneDrive/Desktop/Greenhouse_study/Pilot_study.csv", 
   header=T)
-#install.packages("cowplot")
-#install.packages("gridtext")
-#install.packages("ggpubr")
-library(cowplot)
-library(tidyverse)
-library(forcats)
-library(ggplot2)
-library(ggpubr)
-library(rstatix)
+
+suppressPackageStartupMessages(library(cowplot))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(forcats))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(ggpubr))
+suppressPackageStartupMessages(library(rstatix))
+suppressPackageStartupMessages(library(datateachr))
+suppressPackageStartupMessages(library(dplyr))
 ```
 
 From Milestone 2, you chose two research questions. What were they? Put
@@ -99,7 +99,8 @@ boxplot.
 ``` r
 #Creating a tibble to focus on the Bluecrop variety 
 Blue<-as_tibble(Pilot) %>%
-  filter(Variety == "Bluecrop")
+  filter(Variety == "Bluecrop") %>%
+  rename(TSS = Average_TSS)
 
 #Re-creating the boxplot from before 
 ggplot(Blue, aes(Pollen_donor, fruit_set)) + geom_boxplot() + 
@@ -107,7 +108,7 @@ ggplot(Blue, aes(Pollen_donor, fruit_set)) + geom_boxplot() +
     ggtitle("Fruit Set vs Pollen Donor in the Bluecrop variety")
 ```
 
-![](mini-project-3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](Milestone3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ``` r
 #If I wanted to edit this boxplot to include the Duke variety
@@ -117,7 +118,7 @@ ggplot(Pilot, aes(Pollen_donor, fruit_set)) + facet_wrap(~Variety) + geom_boxplo
     ggtitle("Fruit Set vs Pollen Donor in Both Varieties")
 ```
 
-![](mini-project-3_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+![](Milestone3_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
 
 <!----------------------------------------------------------------------------->
 
@@ -182,7 +183,7 @@ ggplot(alldata, aes(Pollen_donor, fruit_set, fill = Cross)) + facet_wrap(~Variet
     ggtitle("Fruit Set vs Pollen Donor in Both Varieties")
 ```
 
-![](mini-project-3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](Milestone3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 Now that I’ve grouped the treatments (self-cross if the flower received
 pollen from the same variety and out-cross if the flower received pollen
@@ -192,35 +193,7 @@ all treatments in the Bluecrop variety relative to the Duke variety. I
 can also see that the control treatment had the lowest fruit set in the
 Bluecrop variety but this wasn’t the case in the Duke variety!
 
-**Task Number**: Joining a new factor with existing factors
-
-Because I only have two categorical variables/factors in this data set,
-it makes very little sense for me to re-organize the factors. I am also
-not missing any data from either of the factor columns but I can add a
-factor to the existing data set. Please note that the factor I’m adding
-is NOT true data. I will join the new factor to the existing data set as
-a demonstration of my understanding of the forcat package.
-
-``` r
-#data2<- Pilot %>%
-  #select(Variety, Pollen_donor, fruit_set, berry_weight, Average_TSS) %>%
-  #arrange(Variety, Pollen_donor)
-#
-#head(data2, n=36)
-
-#df1 <- factor(c(Species = "Highbush", "Lowbush"), c(Variety = "Bluecrop", "Duke"))
-#df1
-#nrow(alldata$Variety)
-
-#df2 <-bind_cols(df1, alldata$Variety)
-
-#come back to this!!!!!!!!!!!!
-```
-
-<!----------------------------------------------------------------------------->
-<!-------------------------- Start your work below ---------------------------->
-
-**Task Number**: 2 (without use of forcats)
+**Task Number**: (without use of forcats)
 
 It may also be helpful to combine data from both varieties, increasing
 the chances of finding significant differences but perhaps unfairly so.
@@ -232,19 +205,166 @@ like if I combined this data.
 ``` r
 #Note: the code used to remove the x-axis label was obtained from https://www.datanovia.com/en/blog/ggplot-axis-labels/#:~:text=Remove%20the%20x%20and%20y,x%20%3D%20element_blank())%20.
 
-ggplot(alldata, aes(Cross, fruit_set)) + geom_boxplot() + 
+#Examining TSS differences among treatments in Bluecrop
+ggplot(Blue, aes(Pollen_donor, TSS)) + geom_boxplot() + 
+    geom_jitter(width=0.1, alpha=0.5) + xlab("pollen donor") + 
+    ylab("total soluble solids (%)") +
+    ggtitle("TSS vs Pollen Donor in the Bluecrop variety")
+```
+
+![](Milestone3_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+#Creating a tibble to focus on Duke 
+Du <-as_tibble(Pilot) %>%
+  filter(Variety == "Duke") %>%
+  rename(TSS = Average_TSS)
+
+#Examining TSS differences among treatments in Duke 
+ggplot(Du, aes(Pollen_donor, TSS)) + geom_boxplot() + 
+    geom_jitter(width=0.1, alpha=0.5) + xlab("pollen donor") + 
+    ylab("total soluble solids (%)") +
+    ggtitle("TSS vs Pollen Donor in the Duke variety")
+```
+
+![](Milestone3_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+
+``` r
+#Examining TSS differences in combined treatments 
+ggplot(alldata, aes(Cross, TSS)) + geom_boxplot() + 
     geom_jitter(width=0.1, alpha=0.5) + 
     ylab("fruit set (%)") +  theme(axis.title.x = element_blank()) +
     ggtitle("Fruit Set vs Pollen Donor")
 ```
 
-![](mini-project-3_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](Milestone3_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
 
 Surprisingly, combining the data and ignoring the different varieties
-actually made the differences between my boxplots look less significant!
-I would still compare the models for both the combined data and the
-original but I feel the original would probably be better for exploring
-this potential relationship.
+actually made the differences between my boxplots look smaller! I would
+still compare the models for both the combined data and the original but
+I feel the original would probably be better for exploring this
+potential relationship.
+
+<!----------------------------------------------------------------------------->
+<!-------------------------- Start your work below ---------------------------->
+
+**Task Number**: #1 reorder factor in original plot using forcats
+
+Unfortunately, because my original data set only has two categorical
+variables it is rather difficult/meaningless to re-arrange my factors.
+Both the columns “Variety” and “pollen_donor” have repeating levels and
+no unique IDs. As you saw before, any meaningful way to sort my data was
+done without the need of the forcats package. So, I will have to ignore
+my research questions for this task and use one of the alternative data
+sets I looked at in Milestone 1. Below, I will be reviewing and working
+with the parking meter dataset to demonstrate my ability to re-arrange
+factors using ‘forcats’.
+
+``` r
+#Reviewing the parking meter data set from Milestone 1
+#View(twin)
+
+#New research question: Do parking meters collect less after 6 PM during the business week?
+#Note, when I say less, I mean relative to the money collected from 9 - 6 PM.
+#Because there are different types of meters, I'll also narrow it down just to the "Twin" type. 
+twin <- parking_meters %>% 
+filter(meter_head %in% c("Twin"))
+
+business <- twin %>% 
+  mutate(r_mf_9a_6p = fct_rev(fct_infreq(r_mf_9a_6p)))
+ggplot(business, aes(r_mf_9a_6p)) + geom_bar()
+```
+
+![](Milestone3_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+after_business <- twin %>% 
+  mutate(r_mf_6p_10 = fct_rev(fct_infreq(r_mf_6p_10)))
+#ggplot(after_business, aes(r_mf_6p_10)) + geom_col()
+
+#May be more helpful to just use the count function
+  twin %>%
+    count(r_mf_9a_6p) 
+```
+
+    ## # A tibble: 9 x 2
+    ##   r_mf_9a_6p     n
+    ##   <chr>      <int>
+    ## 1 $1.00       3062
+    ## 2 $2.00       1742
+    ## 3 $3.00       1232
+    ## 4 $4.00        776
+    ## 5 $5.00        812
+    ## 6 $6.00        446
+    ## 7 $7.00        320
+    ## 8 $8.00        162
+    ## 9 $9.00         62
+
+``` r
+  twin %>%
+    count(r_mf_6p_10)
+```
+
+    ## # A tibble: 8 x 2
+    ##   r_mf_6p_10     n
+    ##   <chr>      <int>
+    ## 1 $1.00       5012
+    ## 2 $2.00       1114
+    ## 3 $3.00        938
+    ## 4 $4.00        690
+    ## 5 $5.00        388
+    ## 6 $6.00        258
+    ## 7 $7.00        182
+    ## 8 $8.00         32
+
+Comparing these figures side by side would be a little misleading since
+the y-axis are different. But upon close examination, one can see there
+are many more instances of people only paying a dollar after 6pm
+relative to business hours. You can also see that there are incidences
+of people paying $9 during business hours but not after 6 pm. This plot
+does not prove that the meters collect more after business hours during
+the work week (in fact,it suggests that the meter collects less). The
+figure, however, is a good first step at determining if this is a
+relationship/queston worth pursuing further with statistics. Neither a
+regression or an ANOVA would work in this case though because the data
+is NOT normally distributed (and the data is NOT continuous).
+
+**Task Number**: #2 group some of the factors into another category
+
+Let’s say that I wanted to regroup the meter rates for a specific column
+(in this case weekdays 9 am to 6 pm). There is so many individual rows
+and if you’re looking for broader patterns, a difference in a dollar may
+not be significant to you.
+
+``` r
+#Creating factors for the weekday rates
+twin$r_mf_9a_6p<- factor(twin$r_mf_9a_6p)
+twin$r_mf_9a_6p <- factor(twin$r_mf_6p_10)
+
+NEW <- twin %>%
+      mutate(r_mf_9a_6p = fct_collapse(r_mf_9a_6p,
+             "$1" = c("$1.00"),
+             "$2-4" = c("$2.00", "$3.00", "$4.00"),
+             "$5-7" = c("$5.00", "$6.00", "$7.00" ),
+             "$8" = c("$8.00")))
+#The old plot
+ggplot(data = twin, aes(x=r_mf_9a_6p)) + geom_bar() + xlab("meter rates") +
+  ggtitle("Twin meter rates from Monday through Friday 9 am - 6pm")
+```
+
+![](Milestone3_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+#The new plot
+ggplot(data = NEW, aes(x=r_mf_9a_6p)) + geom_bar() + xlab("meter rates") +
+    ggtitle("Twin meter rates from Monday through Friday 9 am - 6pm")
+```
+
+![](Milestone3_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+
+The second plot created is a little easier on the eyes relative to the
+first one, while still showing that the $1 rates far outnumber the other
+rates, even after combining some factors!
 
 <!----------------------------------------------------------------------------->
 
@@ -294,29 +414,28 @@ distribution).
 
 ``` r
 #Creating a model for the Bluecrop variety 
-model1<- aov(Average_TSS ~ Pollen_donor, data = Blue)
+model1 <- aov(TSS ~ Pollen_donor, data = Blue)
 
 #Checking normal distribution and equal variance assumptions
 ggqqplot(residuals(model1))
 ```
 
-![](mini-project-3_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](Milestone3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 plot(model1,1)
 ```
 
-![](mini-project-3_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+![](Milestone3_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
 ``` r
-shapiro.test(Blue$Average_TSS)
+shapiro_test(data = Blue, TSS)
 ```
 
-    ## 
-    ##  Shapiro-Wilk normality test
-    ## 
-    ## data:  Blue$Average_TSS
-    ## W = 0.96227, p-value = 0.6461
+    ## # A tibble: 1 x 3
+    ##   variable statistic     p
+    ##   <chr>        <dbl> <dbl>
+    ## 1 TSS          0.962 0.646
 
 ``` r
 #Filtering just for the Duke variety 
@@ -330,23 +449,22 @@ model2 <- aov(Average_TSS ~ Pollen_donor, data = Du)
 ggqqplot(residuals(model2))
 ```
 
-![](mini-project-3_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
+![](Milestone3_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
 
 ``` r
 plot(model2,1)
 ```
 
-![](mini-project-3_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->
+![](Milestone3_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
 
 ``` r
-shapiro.test(Du$Average_TSS)
+shapiro_test(data = Du, Average_TSS)
 ```
 
-    ## 
-    ##  Shapiro-Wilk normality test
-    ## 
-    ## data:  Du$Average_TSS
-    ## W = 0.93113, p-value = 0.2273
+    ## # A tibble: 1 x 3
+    ##   variable    statistic     p
+    ##   <chr>           <dbl> <dbl>
+    ## 1 Average_TSS     0.931 0.227
 
 I’ve fit the data to an anova model and checked the normal distribution
 and equal variance of residuals assumptions.
@@ -423,19 +541,32 @@ function.
 
 <!-------------------------- Start your work below ---------------------------->
 
-``` r
-#Retrieving a tibble I created in milestone 2
-Data<-as_tibble(Pilot) %>%
-select(Variety, Pollen_donor, berry_weight, fruit_set,
-Average_TSS, Average_pH, TA.true.) %>%
-arrange(Pollen_donor, desc(fruit_set)) %>%
-rename(Berry_weight_g = berry_weight) %>%
-rename(TSS = Average_TSS) %>%
-rename(pH = Average_pH) %>%
-rename(Titratable_acid = TA.true.)
+I did not follow the instructions correctly in Milestone 2 (Exercise
+1.2) so I will have to create a table here. In Milestone 2, I was
+interested in descriptive statistics surrounding the fruit set of the
+two varieties.
 
-#Writing the tibble I created in Milestone 2 as a csv
-write_csv(Data, here::here("output", "exported_data.csv"))
+``` r
+#Creating the table 
+Table1 <- Blue %>%
+  group_by(Pollen_donor) %>% 
+  summarise(mean = mean(fruit_set, na.rm = TRUE), 
+  median = median(fruit_set, na.rm = TRUE), 
+  sd(fruit_set, na.rm = TRUE)) 
+
+Table1
+```
+
+    ## # A tibble: 3 x 4
+    ##   Pollen_donor  mean median `sd(fruit_set, na.rm = TRUE)`
+    ##   <chr>        <dbl>  <dbl>                         <dbl>
+    ## 1 Bluecrop     0.533  0.466                         0.138
+    ## 2 Duke         0.634  0.640                         0.183
+    ## 3 Reka         0.713  0.675                         0.169
+
+``` r
+#Writing the table I created above as a csv
+write_csv(Table1, here::here("output", "Blue_fruitset.csv"))
 ```
 
 <!----------------------------------------------------------------------------->
@@ -456,14 +587,14 @@ saveRDS(model1, here::here("output", "Model1"))
 dir(here::here("output"))
 ```
 
-    ## [1] "exported_data.csv" "Model1"
+    ## [1] "Blue_fruitset.csv" "exported_data.csv" "Model1"
 
 ``` r
 readRDS(here::here("output", "Model1"))
 ```
 
     ## Call:
-    ##    aov(formula = Average_TSS ~ Pollen_donor, data = Blue)
+    ##    aov(formula = TSS ~ Pollen_donor, data = Blue)
     ## 
     ## Terms:
     ##                 Pollen_donor Residuals
