@@ -15,7 +15,7 @@ Milestone 2 [X] - October 19th 2021
  - Understand what 'tidy' data is and how to create it.
  - Better understand how to use R to answer research questions. 
 
-Milestone 3 [ ] - October 28, 2021
+Milestone 3 [X] - October 28, 2021
  - Manipulate special data types in R: factors and/or dates and times.
  - Fit a model object to your data and extract a result.
  - Read and write data as separate files.
